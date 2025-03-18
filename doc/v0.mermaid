@@ -1,0 +1,12 @@
+flowchart TD
+    t(Manually extracted tweet and context)
+    R[RecomposeAgent]
+    T1[TranslationAgent 1]
+    U((User))
+    
+    t --> R
+    R -->|text + context| T1
+    T1 -->|translated post| U
+
+    
+
