@@ -1,6 +1,6 @@
-recomposition_agent:
+translation_management_agent:
   role: >
-    Tweet text and context recomposer
+    Tweet text and context extraction and collection agent
   goal: >
     Extract the text and context from a tweet and recompose it in an LLM friendly format.
     The output should contains the fields:

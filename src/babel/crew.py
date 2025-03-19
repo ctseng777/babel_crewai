@@ -28,7 +28,7 @@ class TweetTranslationCrew():
     @agent
     def recomposition_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config['recomposition_agent'],
+            config=self.agents_config['translation_management_agent'],
             verbose=True,
             llm=sambanova_llm
         )
@@ -61,4 +61,5 @@ class TweetTranslationCrew():
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
+            output_log_file=True
         )
