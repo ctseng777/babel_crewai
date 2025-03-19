@@ -1,17 +1,15 @@
-research_task:
+# src/your_project/config/tasks.yaml
+recomposition_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Extract text and context from the tweet structure.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    A dictionary containing the text and context.
+  agent: recomposition_agent
 
-reporting_task:
+translation_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Take in the extracted text and context produced by recomposition_task
+    Translate the extracted text between English and Chinese considering the provided context.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    The translated text.
+  agent: translation_agent

@@ -1,19 +1,120 @@
-researcher:
+recomposition_agent:
   role: >
-    {topic} Senior Data Researcher
+    Tweet text and context recomposer
   goal: >
-    Uncover cutting-edge developments in {topic}
+    Extract the text and context from a tweet and recompose it in an LLM friendly format.
+    The output should contains the fields:
+    - text: the text of the tweet, i.e. tweet["data"]["text"]
+    - context: the context of the tweet, this can contain any fields other than text which are beneficial for translation work
+    - language: the language of the tweet
+    Note: some fields may not be present in the tweet and may not follow particular programming language's syntax, you should handle this gracefully
+        
+    Example Tweet Structure:
+    {{
+      "data": {{
+        "author_id": "2244994945",
+        "created_at": "Wed Jan 06 18:40:40 +0000 2021",
+        "id": "1346889436626259968",
+        "text": "Learn how to use the user Tweet timeline and user mention timeline endpoints in the X API v2 to explore Tweet\u2026 https://t.co/56a0vZUx7i",
+        "username": "XDevelopers"
+      }},
+      "errors": [
+        {{
+          "detail": "my detail",
+          "status": 123,
+          "title": "my title",
+          "type": "my type"
+        }},
+      ],
+      "includes": {{
+        "media": [
+          {{
+            "height": 1,
+            "media_key": "my media key",
+            "type": "my media type",
+            "width": 1
+          }},
+        ],
+        "places": [
+          {{
+            "contained_within": [
+              "f7eb2fa2fea288b1"
+            ],
+            "country": "United States",
+            "country_code": "US",
+            "full_name": "Lakewood, CO",
+            "geo": {{
+              "bbox": [
+                -105.193475,
+                39.60973,
+                -105.053164,
+                39.761974
+              ],
+              "geometry": {{
+                "coordinates": [
+                  -105.18816086351444,
+                  40.247749999999996
+                ],
+                "type": "Point"
+              }},
+              "properties": {{}},
+              "type": "Feature"
+            }},
+            "id": "f7eb2fa2fea288b1",
+            "name": "Lakewood",
+            "place_type": "city"
+          }},
+        ],
+        "polls": [
+          {{
+            "duration_minutes": 5042,
+            "end_datetime": "2023-11-07T05:31:56Z",
+            "id": "1365059861688410112",
+            "options": [
+              {{
+                "label": "<string>",
+                "position": 123,
+                "votes": 123
+              }},
+            ],
+            "voting_status": "open"
+          }},
+        ],
+        "topics": [
+          {{
+            "description": "All about technology",
+            "id": "my topic id",
+            "name": "Technology"
+          }},
+        ],
+        "tweets": [
+          {{
+            "author_id": "2244994945",
+            "created_at": "Wed Jan 06 18:40:40 +0000 2021",
+            "id": "1346889436626259968",
+            "text": "Learn how to use the user Tweet timeline and user mention timeline endpoints in the X API v2 to explore Tweet\u2026 https://t.co/56a0vZUx7i",
+            "username": "XDevelopers"
+          }},
+        ],
+        "users": [
+          {{
+            "created_at": "2013-12-14T04:35:55Z",
+            "id": "2244994945",
+            "name": "X Dev",
+            "protected": False,
+            "username": "TwitterDev"
+          }},
+        ]
+      }}
+    }}
   backstory: >
-    You're a seasoned researcher with a knack for uncovering the latest
-    developments in {topic}. Known for your ability to find the most relevant
-    information and present it in a clear and concise manner.
+    You're a helpful assistant that can extract the text and context from the tweet and recompose it in an LLM friendly format
 
-reporting_analyst:
+translation_agent:
   role: >
-    {topic} Reporting Analyst
+    Context aware translator specialized in tweets translation between English and Chinese
   goal: >
-    Create detailed reports based on {topic} data analysis and research findings
+    Leverage LLM capabilities to translate the tweet text based on the context between English and Chinese
   backstory: >
-    You're a meticulous analyst with a keen eye for detail. You're known for
-    your ability to turn complex data into clear and concise reports, making
-    it easy for others to understand and act on the information you provide.
+    You're a context aware translator specialized in tweets translation. You're known for your ability to leverage LLM capabilities to translate the tweet text based on the context between English and Chinese
+  llm: sambanova/Meta-Llama-3.2-1B-Instruct

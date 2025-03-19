@@ -1,13 +1,21 @@
-from crewai import Agent, Crew, Process, Task
+import os
+from crewai import LLM, Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
+# Initialize the SambaNova LLM
+sambanova_llm = LLM(
+    model="sambanova/Meta-Llama-3.1-8B-Instruct",
+    api_key=os.getenv("SAMBANOVA_API_KEY"),
+    temperature=0.7
+)
+
 @CrewBase
-class Babel():
-    """Babel crew"""
+class TweetTranslationCrew():
+    """Tweet translation crew"""
 
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
@@ -18,45 +26,39 @@ class Babel():
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
-    def researcher(self) -> Agent:
+    def recomposition_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config['researcher'],
-            verbose=True
+            config=self.agents_config['recomposition_agent'],
+            verbose=True,
+            llm=sambanova_llm
         )
 
     @agent
-    def reporting_analyst(self) -> Agent:
+    def translation_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config['reporting_analyst'],
-            verbose=True
-        )
-
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
-    @task
-    def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_task'],
+            config=self.agents_config['translation_agent'],
+            verbose=True,
+            llm=sambanova_llm
         )
 
     @task
-    def reporting_task(self) -> Task:
+    def recomposition_task(self) -> Task:
         return Task(
-            config=self.tasks_config['reporting_task'],
-            output_file='report.md'
+            config=self.tasks_config['recomposition_task'],
+        )
+
+    @task
+    def translation_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['translation_task'],
         )
 
     @crew
     def crew(self) -> Crew:
-        """Creates the Babel crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
+        """Creates the TweetTranslation crew."""
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )
