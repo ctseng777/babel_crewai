@@ -1,8 +1,9 @@
 # Babel Crew
 
-## Installation
+## Installation (for Mac arm64 Universal architecture)
+Refer to the [post](https://community.crewai.com/t/onnxruntime-doesnt-have-a-source-distribution-or-wheel-for-the-current-platform/1495/18)
 
-Ensure you have Python >=3.10 <3.13 installed on your system. 
+Use Python 3.11
 
 Create virtual environment
 ```
@@ -10,19 +11,20 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+Install crewai 0.80.0
 ```
-pip install crewai
-pip install crewai_tools
+pip install crewai==0.80.0
+pip install socksio # also required to create crew
 ```
 
-Note that for Mac OS with arm64 architecture, onnxruntime can be problem. Install onnxruntime-silicon instead
+Modify project.toml
 ```
-pip uninstall onnxruntime
-pip install onnxruntime-silicon
-```
-Check architecture
-```
-python3 -c "import platform; print(platform.machine())" 
+dependencies = [
+    "crewai[tools]>=0.80.0,<1.0.0",
+    "onnxruntime==1.15.0",
+    "socksio>=1.0.0",
+    "pyarrow==17.0.0",
+]
 ```
 
 (Optional) Lock the dependencies and install them by using the CLI command:
