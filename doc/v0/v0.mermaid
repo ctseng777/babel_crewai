@@ -1,12 +1,16 @@
+---
+config:
+  theme: neo-dark
+---
 flowchart TD
-    t(Manually extracted tweet and context)
-    M[Translation Management Agent]
-    T1[TranslationAgent 1]
-    U((User))
-    
-    t --> M
-    M -->|text + context| T1
+    subgraph PreparationCrew
+        t(Manually extracted tweet and context)
+        P[TranslationPreparationAgent]
+    end
+    subgraph TranslationCrew
+        T1[TranslationAgent 1]
+        U((User))
+    end
+    t --> P
+    P -->|text + context| T1
     T1 -->|translated post| U
-
-    
-
