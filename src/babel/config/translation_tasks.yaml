@@ -1,0 +1,8 @@
+
+translation_task:
+  description: >
+    Take in the extracted text and context (a list of links extracted from the text)
+    Translate the extracted text between English and Chinese considering the provided context.
+  expected_output: >
+    The translated text.
+  agent: translation_agent

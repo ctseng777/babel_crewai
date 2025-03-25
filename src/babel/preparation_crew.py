@@ -14,48 +14,34 @@ sambanova_llm = LLM(
 )
 
 @CrewBase
-class TweetTranslationCrew():
-    """Tweet translation crew"""
+class PreparationCrew():
+    """Preparation crew"""
 
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-    agents_config = 'config/agents.yaml'
-    tasks_config = 'config/tasks.yaml'
+    agents_config = 'config/preparation_agents.yaml'
+    tasks_config = 'config/preparation_tasks.yaml'
 
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
-    def recomposition_agent(self) -> Agent:
+    def preparation_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config['translation_management_agent'],
-            verbose=True,
-            llm=sambanova_llm
-        )
-
-    @agent
-    def translation_agent(self) -> Agent:
-        return Agent(
-            config=self.agents_config['translation_agent'],
+            config=self.agents_config['preparation_agent'],
             verbose=True,
             llm=sambanova_llm
         )
 
     @task
-    def recomposition_task(self) -> Task:
+    def preparation_task(self) -> Task:
         return Task(
-            config=self.tasks_config['recomposition_task'],
-        )
-
-    @task
-    def translation_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['translation_task'],
+            config=self.tasks_config['preparation_task'],
         )
 
     @crew
-    def crew(self) -> Crew:
-        """Creates the TweetTranslation crew."""
+    def preparation_crew(self) -> Crew:
+        """Creates the Preparation crew."""
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
