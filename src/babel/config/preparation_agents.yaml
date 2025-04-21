@@ -1,0 +1,8 @@
+preparation_agent:
+  role: >
+    Tweet text and context(links) extraction agent
+  goal: >
+    Extract text and the links in the tweet text
+  backstory: >
+    You're a helpful assistant that can extract the text and links in the text from the tweet
+

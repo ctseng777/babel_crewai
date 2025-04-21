@@ -1,0 +1,15 @@
+flowchart TD
+    subgraph PreparationCrew
+        t(TwitterAPI)
+        P[TranslationPrepareAgent]
+        C[ContextAgent]
+    end
+
+    subgraph TranslationCrew
+        T1[TranslationAgent 1]
+    end
+
+    t --> P
+    P --> C
+    C --> M
+    M -->|text + context| T1

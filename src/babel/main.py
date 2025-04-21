@@ -3,21 +3,14 @@ import sys
 import warnings
 
 from datetime import datetime
-
-from babel.crew import TweetTranslationCrew
+from pydantic import BaseModel
+from crewai.flow.flow import Flow, listen, start
+from babel.preparation_crew import PreparationCrew
+from babel.translation_crew import TranslationCrew
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
-# This main file is intended to be a way for you to run your
-# crew locally, so refrain from adding unnecessary logic into this file.
-# Replace with inputs you want to test with, it will automatically
-# interpolate any tasks and agents information
-
-def run():
-    """
-    Run the tweet translation crew.
-    """
-    tweet = {
+tweet = {
       "data": {
         "author_id": "2244994945",
         "created_at": "Wed Jan 06 18:40:40 +0000 2021",
@@ -114,36 +107,64 @@ def run():
         ]
       }
     }
-    inputs = {'tweet': tweet}
 
-    try:
-        TweetTranslationCrew().crew().kickoff(inputs=inputs)
-    except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
+class TranslationState(BaseModel):
+    text: str = ""
+    context: list[str] = []
+    language: str = "en"
+    translated_text: str = ""
+
+class TranslationFlow(Flow[TranslationState]):
+    @start
+    def extract_text_and_context(self):
+        result = PreparationCrew().crew().kickoff(inputs=tweet)
+        self.state.text = result["text"]
+        self.state.context = result["context"]
+        print(result)
+        return {"text": self.state.text, "context": self.state.context}
+    
+    @listen(extract_text_and_context)
+    def translate_text(self, text_and_context):
+        result = TranslationCrew().crew().kickoff(inputs=text_and_context)
+        self.state.translated_text = result["translated_text"]
+        print(result)
+        return {"translated_text": self.state.translated_text}
+    
+def run():
+    translation_flow = TranslationFlow()
+    translation_flow.kickoff()
+
+def plot():
+    translation_flow = TranslationFlow()
+    translation_flow.plot()
+
+if __name__ == "__main__":
+    run()
+    plot()
 
 
-def train():
-    """
-    Train the crew for a given number of iterations.
-    """
-    inputs = {
-        "topic": "Tweet translation"
-    }
-    try:
-        TweetTranslationCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+# def train():
+#     """
+#     Train the crew for a given number of iterations.
+#     """
+#     inputs = {
+#         "topic": "Tweet translation"
+#     }
+#     try:
+#         PreparationCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
-    except Exception as e:
-        raise Exception(f"An error occurred while training the crew: {e}")
+#     except Exception as e:
+#         raise Exception(f"An error occurred while training the crew: {e}")
 
-def replay():
-    """
-    Replay the crew execution from a specific task.
-    """
-    try:
-        TweetTranslationCrew().crew().replay(task_id=sys.argv[1])
+# def replay():
+#     """
+#     Replay the crew execution from a specific task.
+#     """
+#     try:
+#         PreparationCrew().crew().replay(task_id=sys.argv[1])
 
-    except Exception as e:
-        raise Exception(f"An error occurred while replaying the crew: {e}")
+#     except Exception as e:
+#         raise Exception(f"An error occurred while replaying the crew: {e}")
 
 # def test():
 #     """

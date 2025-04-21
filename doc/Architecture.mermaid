@@ -1,27 +1,30 @@
+---
+config:
+  theme: neo-dark
+  layout: elk
+---
 flowchart TD
-    Twitter(TwitterAPI)
-    F[TwitterFetchAgent]
-    R[RecomposeAgent]
-    L[LanguageDetectionAgent]
-    T1[TranslationAgent 1]
-    T2[TranslationAgent 2]
-    T3[TranslationAgent 3]
-    S[ContextAgent]
-    E[EvaluationAgent]
-    U((User))
-    
+ subgraph PreparationCrew["PreparationCrew"]
+        Twitter("TwitterAPI")
+        F["TwitterFetchAgent"]
+        P["TranslationPreparationAgent"]
+        L["LanguageDetectionAgent"]
+        C["ContextAgent"]
+  end
+ subgraph TranslationCrew["TranslationCrew"]
+        T1["TranslationAgent 1"]
+        T2["TranslationAgent 2"]
+        T3["TranslationAgent 3"]
+        E["EvaluationAgent"]
+        U(("User"))
+  end
     Twitter --> F
-    F --> R
-    R -->|text| L
-    R --> S
-    R -->|text + context| T1
-    R -->|text + context| T2
-    R -->|text + context| T3
-    T1 -->|translated post| E
-    T2 -->|translated post| E
-    T3 -->|translated post| E
-    E -->|Feedback| R
-    E -->|translated text| U
-
-    
-
+    F --> M
+    P -- text --> L
+    P -- list of links --> C
+    P -- text + context --> T1 & T2 & T3
+    T1 -- translated post --> E
+    T2 -- translated post --> E
+    T3 -- translated post --> E
+    E -- Feedback --> M
+    E -- translated text --> U

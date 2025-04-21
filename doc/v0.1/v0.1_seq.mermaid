@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant t as text
+    participant M as TranslationManagementAgent
+    participant C as ContextAgent
+    participant T1 as TranslationAgent
+    participant U as User
+
+    t->>M: Feed Manually extracted tweet and context
+    M->>C: Extract list of links from tweet
+    C->>M: Dictionary of {link, context}
+    M->>T1: text + dictionary of {link, context}
+    T1->>U: Translated text

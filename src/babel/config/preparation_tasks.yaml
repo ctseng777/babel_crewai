@@ -1,12 +1,8 @@
-translation_management_agent:
-  role: >
-    Tweet text and context extraction and collection agent
-  goal: >
-    Extract the text and context from a tweet and recompose it in an LLM friendly format.
-    The output should contains the fields:
-    - text: the text of the tweet, i.e. tweet["data"]["text"]
-    - context: the context of the tweet, this can contain any fields other than text which are beneficial for translation work
-    - language: the language of the tweet
+# src/your_project/config/tasks.yaml
+preparation_task:
+  description: >
+    Extract text and context (links) from the tweet text.
+
     Note: some fields may not be present in the tweet and may not follow particular programming language's syntax, you should handle this gracefully
         
     Example Tweet Structure:
@@ -107,14 +103,9 @@ translation_management_agent:
         ]
       }}
     }}
-  backstory: >
-    You're a helpful assistant that can extract the text and context from the tweet and recompose it in an LLM friendly format
+  expected_output: >
+    A dictionary containing the text and context:
+    - text: the text of the tweet, i.e. tweet["data"]["text"]
+    - context: a list of links extracted from the tweet text
+  agent: preparation_agent
 
-translation_agent:
-  role: >
-    Context aware translator specialized in tweets translation between English and Chinese
-  goal: >
-    Leverage LLM capabilities to translate the tweet text based on the context between English and Chinese
-  backstory: >
-    You're a context aware translator specialized in tweets translation. You're known for your ability to leverage LLM capabilities to translate the tweet text based on the context between English and Chinese
-  llm: sambanova/Meta-Llama-3.2-1B-Instruct

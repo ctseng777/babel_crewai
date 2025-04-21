@@ -1,0 +1,16 @@
+---
+config:
+  theme: neo-dark
+---
+flowchart TD
+    subgraph PreparationCrew
+        t(Manually extracted tweet and context)
+        P[TranslationPreparationAgent]
+    end
+    subgraph TranslationCrew
+        T1[TranslationAgent 1]
+        U((User))
+    end
+    t --> P
+    P -->|text + context| T1
+    T1 -->|translated post| U
